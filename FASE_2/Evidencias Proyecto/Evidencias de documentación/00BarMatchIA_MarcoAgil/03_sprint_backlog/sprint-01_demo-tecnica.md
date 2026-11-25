@@ -25,7 +25,15 @@
 | KAN-84 | J-04 | ETL mínimo → tablas estrella → KPIs JSON | Josefa | ⏳ |
 | KAN-85 | J-05 | `features/analitica`: 3 gráficos + aviso "Datos sintéticos" | Josefa | ⏳ |
 
-**Resultado del Sprint Goal:** ⚠️ **Parcial** `<TBD:confirmar-equipo>`. El frontend completo sobre adaptadores mock quedó listo; la integración con la API real y la analítica quedaron como arrastre.
+**Resultado histórico del Sprint Goal (registro al 17/10):** ⚠️ **Parcial** `<TBD:confirmar-equipo>`. El frontend completo sobre adaptadores mock quedó listo; la integración con la API real y la analítica quedaron como arrastre.
 **Incremento:** app móvil (Cliente + Personal) y web Admin Local navegables de punta a punta sobre mocks que respetan el contrato; monorepo reproducible (`git clone → pnpm install → pnpm --filter mobile test`).
 **Arrastre al Sprint 2:** R-01 a R-07, J-02 a J-05, D-09.
 **Retrospectiva:** [retro-sprint-01](../06_retrospectivas/retro-sprint-01.md) — triage de la demo en KAN-20.
+
+## Contraste posterior: cierre técnico del 15/11/2026
+
+Esta sección actualiza la trazabilidad sin atribuir el trabajo posterior a las fechas del sprint ni cambiar sus estados Jira del 17/10. La integración real (#159), KPI/DWH (#163) y auditoría de cierre (#169) respaldan la evolución del incremento. El ensayo sin mocks dio 10/10 y el barrido final 19/19; el [backlog vigente](../02_product_backlog.md) distingue implementado, validado, pendiente y MVP2.
+
+Los mocks describen el incremento histórico, no el estado actual del MVP1. BI-03 y el dashboard con DWH de pruebas están acreditados; jobs y correo no se consideran activados, y las pruebas físicas siguen NO EJ. No se declara una aceptación del Sprint Goal, una retrospectiva adicional ni un cierre de tickets sin acta o evidencia administrativa.
+
+Fuentes y commits: [índice documental](../../README.md#fuentes-y-alcance).

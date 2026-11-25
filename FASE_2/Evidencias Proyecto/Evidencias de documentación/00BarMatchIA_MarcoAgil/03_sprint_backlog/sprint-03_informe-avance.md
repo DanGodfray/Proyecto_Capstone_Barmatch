@@ -11,5 +11,13 @@
 | `<TBD>` | — | Configuración inicial 21.6.9; supervisión 21.6.11; consulta administrativa + timeline 21.6.18 (plan §12.2) | Raúl | `<TBD:registrar-en-jira>` |
 | `<TBD>` | — | Dataset de entrenamiento; modelo base (plan §12.2) | Josefa | `<TBD:registrar-en-jira>` |
 
-**Resultado del Sprint Goal:** `<TBD:confirmar-equipo>`.
+**Resultado histórico del Sprint Goal:** `<TBD:confirmar-equipo>`; no hay acta de aceptación adicional en esta revisión.
 **Decisión registrada (Minuta 13/10):** los contratos se alinean a las respuestas reales del backend (nomenclatura `camelCase`, IDs como texto, error `{ statusCode, codigo, message }`), pendiente de confirmación de Raúl (BACK-01/02). Esto reemplaza el valor provisional `<TBD:naming> = snake_case`.
+
+## Contraste posterior: cierre técnico del 15/11/2026
+
+Esta sección actualiza la trazabilidad sin atribuir el trabajo posterior a las fechas del sprint ni cambiar sus estados Jira del 17/10. La integración real (#159), KPI/DWH (#163) y auditoría de cierre (#169) respaldan la evolución del incremento. El ensayo sin mocks dio 10/10 y el barrido final 19/19; el [backlog vigente](../02_product_backlog.md) distingue implementado, validado, pendiente y MVP2.
+
+Los mocks describen el incremento histórico, no el estado actual del MVP1. BI-03 y el dashboard con DWH de pruebas están acreditados; jobs y correo no se consideran activados, y las pruebas físicas siguen NO EJ. No se declara una aceptación del Sprint Goal, una retrospectiva adicional ni un cierre de tickets sin acta o evidencia administrativa.
+
+Fuentes y commits: [índice documental](../../README.md#fuentes-y-alcance).

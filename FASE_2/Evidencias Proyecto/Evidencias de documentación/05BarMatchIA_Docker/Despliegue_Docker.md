@@ -4,12 +4,12 @@
 
 ## Alcance
 
-La solución emplea Docker y Docker Compose para la reproducibilidad de servicios propios y laboratorios de integración. PostgreSQL OLTP, autenticación y almacenamiento de imágenes se gestionan mediante Supabase; no se presentan como bases de producción alojadas dentro del mismo Compose.
+Docker respalda laboratorios y pruebas de integración reproducibles; el Compose general permanece como artefacto incompleto. PostgreSQL OLTP, autenticación y almacenamiento de imágenes se gestionan mediante Supabase; no se presentan como bases de producción alojadas dentro del mismo Compose.
 
 | Servicio | Tratamiento |
 |---|---|
-| API NestJS | Servicio contenerizable y ensayado en laboratorios de integración |
-| Web React/Vite | Aplicación compilable y servible como recursos estáticos |
+| API NestJS | API validada con laboratorios PostgreSQL/Auth; Dockerfile propio no acreditado, Compose integral incompleto |
+| Web React/Vite | Imagen multi-etapa corregida el 12/11 y prueba local registrada; Compose pendiente de alineación y hosting real posterior |
 | BI/ETL y ML | Procesos Python separados de la transacción operacional |
 | DWH de pruebas | PostgreSQL separado para el análisis y la comprobación de consultas |
 | Mobile Expo | Aplicación del dispositivo; no se entrega como contenedor de producción |
@@ -25,6 +25,8 @@ Los servicios utilizan variables de entorno con permisos diferenciados. Los secr
 
 ## Limitaciones
 
-Quedan como trabajo posterior el hosting productivo, las cabeceras y HTTPS definitivos, los secretos del entorno de destino y la certificación del despliegue público. Los Dockerfiles y Compose auténticos permanecen en el repositorio privado del equipo.
+El Compose general aún conserva configuración incompatible para web y referencia a un Dockerfile de API inexistente. No se debe afirmar que la solución completa arranca con Compose. Hosting productivo, HTTPS definitivo y gestión de secretos son trabajo posterior; no invalidan los laboratorios ni el MVP1 integrado.
 
-**Trazabilidad:** `00BarMatchIA_MarcoAgil/05_diseno/05_docker.md`, PR #169 y `docs/pruebas/auditoria-mvp1-2026-11-15.md` del repositorio privado.
+**Trazabilidad:** [diseño Docker](../00BarMatchIA_MarcoAgil/05_diseno/05_docker.md), [estado privado de Docker y auditoría](../README.md#fuentes-y-alcance).
+
+El [diseño Docker actualizado](../00BarMatchIA_MarcoAgil/05_diseno/05_docker.md) sustituye las plantillas provisionales por el estado efectivamente documentado. [Fuente privada y auditoría](../README.md#fuentes-y-alcance).

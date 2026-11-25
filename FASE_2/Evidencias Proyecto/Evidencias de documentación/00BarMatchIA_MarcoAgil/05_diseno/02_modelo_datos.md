@@ -1,13 +1,13 @@
 # 5.2 Modelo de datos
 
 > **Fuente:** DDL PostgreSQL OLTP v1 (`BarMatchIA_PostgreSQL_ER_v1.sql`) y Diccionario de Datos OLTP — autor Raúl Guerra. Data Mart: Propuesta Preliminar Final — responsable Josefa Morales.
-> Tipo de modelo: **Entidad–Relación clásico (SQL, PostgreSQL)**. 28 tablas + 1 vista en el OLTP.
+> Tipo de modelo: **Entidad–Relación clásico (SQL, PostgreSQL)**. La versión v1 documentaba 28 tablas y una vista; no se presenta ese recuento como inventario de todas las migraciones del cierre.
 
 ## 5.2.1 Principios de diseño
 
 1. **PostgreSQL es la fuente de verdad** de capacidad, reservas y estados.
 2. **Separación de identidad y perfil:** `cuenta` (vinculada a Supabase Auth por `auth_user_id`) + una tabla por perfil (`cliente`, `personal_local`, `admin_local`, `admin_platform`).
-3. **Tres identificadores de reserva:** `id_reserva` (interno, nunca se expone), `codigo_reserva` (legible) y `qr_token` (UUID, solo lo ve el cliente dueño).
+3. **Tres identificadores de reserva:** `id_reserva` (interno; el objetivo es minimizar su exposición, con hallazgo H-4 aún registrado en la API), `codigo_reserva` (legible) y `qr_token` (UUID, solo lo ve el cliente dueño).
 4. **Historia por eventos:** cada cambio de estado de una reserva se registra en `evento_reserva` (actor, motivo, fecha). La cancelación tardía y el origen de la cancelación **se derivan** de estos eventos; no existen estados extra.
 5. **Tiempo normalizado:** catálogo global `bloque_semana` de 336 bloques (7 días × 48 bloques de 30 min), `dia_semana` 1 = lunes … 7 = domingo, zona `America/Santiago`. La jornada nocturna se deriva de `horario_funcionamiento.dia_offset_cierre`.
 6. **Integridad en la base:** restricciones `CHECK` para enumeraciones, rangos (latitud/longitud, `duracion_referencia_min` múltiplo de 30, `holgura ≥ 0`) y claves foráneas en todas las relaciones.
@@ -206,14 +206,14 @@ stateDiagram-v2
 ```
 > ⚠️ **Validar Raúl:** transiciones excepcionales (RN-005 validación anticipada, RN-008 llegada posterior al no-show, RN-023 resolución operacional) no se dibujan para mantener el diagrama legible.
 
-## 5.2.5 Modelo analítico (Data Mart, preliminar)
+## 5.2.5 Modelo analítico y diseño de referencia
 
-> Responsable: **Josefa Morales**. Estado: propuesta preliminar final; ubicación física del DWH `<TBD:dwh-ubicacion>` (KAN-44). Este resumen no reemplaza su documento.
+> Responsable: **Josefa Morales**. El modelo estrella y ETL están implementados y validados en el DWH de pruebas; ubicación provisional según ADR-001. La ubicación final sigue pendiente de decisión, sin invalidar el BI demostrado. El esquema siguiente resume el diseño original y no sustituye el contrato C1 v1.6.
 
 - **Separación física y de credenciales** respecto del OLTP; el ETL lee en modo solo lectura.
-- **Hechos propuestos:** `FACT_RESERVA` (1 fila por reserva), `FACT_ATENCION`, `FACT_USO_FISICO`, `FACT_LISTA_ESPERA`, `FACT_INDISPONIBILIDAD`, `FACT_OPERACION_BLOQUE`.
+- **Hechos del diseño de referencia:** `FACT_RESERVA` (1 fila por reserva), `FACT_ATENCION`, `FACT_USO_FISICO`, `FACT_LISTA_ESPERA`, `FACT_INDISPONIBILIDAD`, `FACT_OPERACION_BLOQUE`.
 - **Dimensiones:** `DIM_FECHA`, `DIM_BLOQUE_HORARIO`, `DIM_ESTABLECIMIENTO` (SCD tipo 2), `DIM_SECTOR`, `DIM_UNIDAD_RESERVABLE`, `DIM_CLIENTE`, `DIM_CATEGORIA`, `DIM_MOTIVO_CANCELACION`, `DIM_MOTIVO_INDISPONIBILIDAD`.
-- **Privacidad (Matriz #25):** sin PII directa. `DIM_CLIENTE` solo con rango etario, género agregado y clave seudonimizada (hash con sal). `qr_token` no se traslada al Data Mart.
+- **Privacidad (Matriz #25):** sin PII directa. `DIM_CLIENTE` solo con rango etario, género agregado y clave seudonimizada (HMAC-SHA256 con sal estable, según el contrato de BI). `qr_token` no se traslada al Data Mart.
 
 ```mermaid
 erDiagram
@@ -234,3 +234,13 @@ erDiagram
     int anticipacion_minutos
   }
 ```
+
+## 5.2.6 Contraste con la evidencia de cierre
+
+Los ER y estados anteriores conservan el diseño conceptual de base; no son una exportación certificada del SQL final. El Motor añade estructuras y controles posteriores. La ocupación física solo se libera por la operación explícita: la duración de referencia y el cierre no liberan mesas por sí mismos.
+
+BI-03 cargó en el DWH de pruebas el histórico Parquet de 90 jornadas, declarado sintético: 13.953 reservas, 15.715 atenciones y 15 locales. Los controles posteriores registraron cero alertas de calidad. La segunda corrida idempotente real P5 fue NO EJ; se conserva el ensayo previo que el acta admite como respaldo. No se transforma ese ensayo en una segunda ejecución real.
+
+La migración 006 permitió consultar `kpi.*` desde la API, con paridad ETL/DWH en 15/15 locales. El rol lector no accede directamente a los hechos del DWH; sus permisos específicos sobre vistas y funciones están documentados en C1 v1.6 y la enmienda de ADR-001 integrada por #176. No se impone una política genérica que contradiga esa decisión verificada.
+
+La ubicación provisional y las credenciales del DWH están separadas del OLTP de la aplicación, aunque el proyecto de pruebas comparte otros objetos. La separación productiva definitiva, BI-06 incremental y BI-08 supresión son evolución posterior. Fuentes: [actas, contrato C1 y ADR](../../README.md#fuentes-y-alcance).

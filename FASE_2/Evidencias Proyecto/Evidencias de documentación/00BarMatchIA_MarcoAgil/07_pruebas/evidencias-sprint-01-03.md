@@ -1,6 +1,6 @@
 # Evidencias de pruebas — Sprints 1 a 3
 
-> Completar cada fila con un **enlace verificable** (ejecución de GitHub Actions, PR, captura en `/evidencias/img`, video). No pegar resultados sin respaldo.
+> Registro histórico de octubre. Sus marcadores se conservan cuando no hay salida individual verificable; la auditoría posterior no se retrofecha como ejecución de estos sprints.
 
 | Caso | Fecha | Evidencia | Resultado | Observación |
 |---|---|---|---|---|
@@ -10,16 +10,9 @@
 | PB-04 — job BI ruff + pytest | `<TBD>` | KAN-90 · `<TBD:link-CI>` | `<TBD:resultado>` | |
 | Checklist físico demo 05/10 | 05/10 | KAN-70 · `<TBD:link-video>` | `<TBD:resultado>` | D-09 aún en curso |
 
-## Cómo generar evidencia reproducible
 
-```bash
-# Cobertura de pruebas de la app móvil (genera carpeta coverage/ con reporte HTML)
-pnpm --filter mobile test -- --coverage
+## Evidencia posterior del cierre
 
-# Cobertura de la web
-pnpm --filter web-admin test -- --coverage
+Las suites y flujos dejaron de estar solo sobre mocks: la auditoría del 15/11 respalda integración real, CI local 31/31, API 284/284 y ensayo general 10/10. El [plan de pruebas actualizado](README.md#75-resultados-ejecutados-del-cierre-mvp1) consolida resultados, entornos y límites sin inventar enlaces a Actions ni cifras de cobertura de octubre.
 
-# BI: lint + pruebas
-cd apps/bi && ruff check . && pytest -q
-```
-Adjuntar el resumen de cobertura (tabla final de Jest) como texto o captura; enlazar la ejecución de CI del commit correspondiente.
+Los [videos publicados del 18/10 y 15/11](../../../Evidencias%20de%20sistema%20aplicacion/) son evidencias históricas complementarias; no se asignan automáticamente a KAN-29/KAN-70 ni cierran los casos físicos NO EJ. Las instrucciones de cobertura del borrador se retiran: este repositorio no distribuye el código ejecutable y la revisión no ejecuta nuevas baterías.

@@ -10,7 +10,7 @@ Las personas que buscan bares y establecimientos de entretenimiento encuentran i
 - **Capacidad consistente:** control transaccional sobre PostgreSQL para evitar la sobreventa incluso ante solicitudes simultáneas, con evidencia de pruebas.
 - **Cuatro actores con permisos diferenciados:** Cliente, Personal, Administrador Local y Administrador de Plataforma.
 - **Analítica operacional:** datos estructurados provenientes del flujo de atención, ETL, DWH e indicadores administrativos.
-- **Inteligencia experimental:** pronósticos y riesgo de inasistencia como módulos BETA, sin hacer depender el motor de reservas de su disponibilidad.
+- **Inteligencia experimental:** ML-01/ML-04 BETA y ML-03 informativo experimental, sin inferencia individual de riesgo validada; las reservas no dependen de su disponibilidad.
 
 ## ¿Qué valor agrega?
 
@@ -25,4 +25,10 @@ Las personas que buscan bares y establecimientos de entretenimiento encuentran i
 
 El MVP1 se validó en un entorno de demostración con datos ficticios o sintéticos. No se declara adopción comercial, impacto medido en locales reales ni despliegue productivo. Funcionalidades futuras como Promo on Demand, EntreMesa, galería editable y otras integraciones deben distinguirse de lo implementado.
 
-**Base documental:** `00BarMatchIA_MarcoAgil/09_innovacion.md`, reglas de negocio 21.11, PR #159, #163 y #169 del repositorio privado.
+**Base documental:** [innovación del marco ágil](../00BarMatchIA_MarcoAgil/09_innovacion.md), [reglas de negocio](../08BarMatchIA_ReglasDeNegocio/) y [fuentes del cierre](../README.md#fuentes-y-alcance).
+
+## Aporte demostrado
+
+La propuesta cuenta con integración funcional, Motor con pruebas de concurrencia, operación y BI de pruebas acreditados. Los beneficios de negocio se expresan como valor esperado: no se inventa adopción ni impacto comercial medido. Las limitaciones no bloqueantes y la evolución productiva se contextualizan sin desvalorizar el MVP1 validado.
+
+[Innovación del marco ágil](../00BarMatchIA_MarcoAgil/09_innovacion.md) y [fuentes de cierre](../README.md#fuentes-y-alcance).

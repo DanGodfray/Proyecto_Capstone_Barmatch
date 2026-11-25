@@ -1,6 +1,6 @@
 # 1. Product Vision — BarMatchIA
 
-> Extensión objetivo: 2 páginas. Fuente: Documento Maestro v0.2.1 (§3–§10), RN 21.11, Matriz de alineamiento.
+> **Corte técnico:** 15/11/2026; revisión documental 25/11/2026. Requisitos: Documento Maestro v0.2.1, RN 21.11 y Matriz de alineamiento. Resultados: [fuentes de cierre](../README.md#fuentes-y-alcance).
 
 ## 1.1 Declaración de visión
 
@@ -37,7 +37,7 @@
 
 ## 1.5 Modelo de sostenibilidad (contexto académico)
 
-B2B2C: el **consumidor usa la plataforma gratis** y el **establecimiento paga** una suscripción mensual (Plan Base: perfil, reservas, disponibilidad, operación; Plan Avanzado: indicadores, históricos, predicciones y recomendaciones). La implementación comercial **no forma parte del MVP** (Documento Maestro §10).
+B2B2C: el **consumidor usa la plataforma gratis** y se propone que el **establecimiento pague** una suscripción mensual (Plan Base: perfil, reservas, disponibilidad, operación; Plan Avanzado: indicadores, históricos, predicciones y recomendaciones). La implementación comercial **no forma parte del MVP** (Documento Maestro §10).
 
 ## 1.6 Objetivos del producto
 
@@ -54,7 +54,7 @@ B2B2C: el **consumidor usa la plataforma gratis** y el **establecimiento paga** 
 
 **Incluye:** exploración y ficha pública; disponibilidad por bloques y "Ahora"; reserva y cancelación (con cancelación tardía derivada); check-in por QR y validación manual; asignación de mesas y atención; walk-in; no-show automático; panel del Personal con *polling*; consulta administrativa de reservas; configuración del establecimiento; analítica sobre datos sintéticos declarados.
 
-**Fuera del MVP (decisión del PO):** reseñas y valoraciones, pagos en línea, notificaciones push (MVP = correo + estado en app), Deep Learning sin justificación, integraciones externas, despliegue comercial. Funcionalidades nuevas (p. ej., *Promo on Demand*) solo entran como cambio de alcance aprobado por el PO.
+**Fuera del MVP (decisión del PO):** reseñas y valoraciones, pagos en línea, proveedor definitivo de push y activación operacional del correo (componentes implementados, con entregas apagadas en el ensayo), Deep Learning sin justificación, integraciones externas, despliegue comercial. Funcionalidades nuevas (p. ej., *Promo on Demand*) solo entran como cambio de alcance aprobado por el PO.
 
 ## 1.8 Indicadores de éxito del MVP
 
@@ -65,3 +65,15 @@ B2B2C: el **consumidor usa la plataforma gratis** y el **establecimiento paga** 
 | Ciclo central demostrable | Guion de demo completo sin intervención manual en la base de datos |
 | Datos personales en BI/IA | 0 campos de identificación directa en el DWH |
 | Panel del Personal | Reserva nueva visible en ≤ 30 s (polling) |
+
+## 1.9 Alcance MVP1 cumplido y validado
+
+La integración del MVP1 y la auditoría del 15/11 respaldan el ciclo de reserva, cancelación y operación, acceso por cuatro perfiles, MFA administrativo y analítica sobre DWH de pruebas. El ensayo general sin mocks obtuvo 10/10 y el barrido final 19/19. Las metas de §1.8 no son un SLA: sobreventa y acceso cuentan con pruebas de laboratorio específicas; el tiempo de actualización del panel no recibe una certificación individual por inferencia de esas cifras.
+
+BI-03 cargó el histórico Parquet sintético y la 006 permitió leer KPI desde la API. El DWH sigue en una ubicación provisional. El mapa móvil existe en la solución revisada; permisos, escáner y comportamiento en Android/iOS físico conservan casos NO EJ.
+
+ML-01/ML-04 tienen integración BETA con horizonte limitado; ML-03 ofrece un estado experimental, sin inferencia individual ni precisión operacional acreditada. La auditoría conserva la verificación manual de Inteligencia «Mañana» como pendiente, aunque el acta del 12/11 registra pruebas del servicio para hoy/D+1: esos alcances se distinguen.
+
+Las limitaciones de endurecimiento y verificaciones físicas se registran con su impacto no bloqueante; no invalidan la integración funcional demostrada.
+
+No-show y notificaciones cuentan con implementación y laboratorios; jobs, correo y entregas no se asumen activados en la demo. Galería editable, BI incremental, supresión hasta el DWH y hosting productivo son evolución MVP2. El [Product Backlog](02_product_backlog.md) detalla las reservas de validación por historia.

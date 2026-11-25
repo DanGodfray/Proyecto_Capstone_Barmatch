@@ -4,7 +4,7 @@
 
 ## Evidencia gráfica
 
-La imagen `ArquitecturaBarMatchIA_MVP.png`, ya publicada en esta carpeta, corresponde al diagrama utilizado en una presentación previa. **No se declara como diagrama definitivo de la versión implementada.** La arquitectura consolidada se describe a continuación.
+La imagen `ArquitecturaBarMatchIA_MVP.png`, ya publicada en esta carpeta, corresponde al diagrama utilizado en una presentación previa. **No se declara como diagrama definitivo de la versión implementada.** Las responsabilidades implementadas y el alcance validado se describen a continuación; no se certifica un despliegue productivo.
 
 ## Componentes y responsabilidades
 
@@ -16,14 +16,14 @@ La imagen `ArquitecturaBarMatchIA_MVP.png`, ya publicada en esta carpeta, corres
 | Base operacional | PostgreSQL en Supabase | Persistencia OLTP; fuente de verdad de reservas, establecimientos y operación |
 | Servicios gestionados | Supabase Auth y Storage | Identidad y almacenamiento de imágenes |
 | Analítica | Python, ETL, Data Warehouse separado | Transformación de datos, indicadores y consultas de BI |
-| Inteligencia | Modelos ML integrados en la solución | Predicción experimental, separada de las transacciones de reserva |
+| Inteligencia | Servicio Python privado | ML-01/ML-04 BETA; ML-03 experimental informativo, sin inferencia individual validada; separado de las reservas |
 
 ## Flujo de comunicación
 
 1. Las aplicaciones móviles y web autentican mediante Supabase Auth y se comunican con la API REST.
 2. La API valida identidad, perfil y pertenencia al establecimiento antes de ejecutar operaciones.
 3. PostgreSQL aplica transacciones y controles de concurrencia para evitar la sobreventa.
-4. Los datos de operación se transforman mediante ETL hacia el DWH de pruebas; el panel administrativo obtiene KPI por una ruta protegida de la API.
+4. El histórico Parquet sintético se transforma mediante ETL hacia el DWH de pruebas; el panel administrativo obtiene KPI por una ruta protegida de la API. La continuidad incremental OLTP en vivo es evolución BI-06.
 5. La Inteligencia BETA está desacoplada de la operación crítica; su indisponibilidad no debe bloquear las reservas.
 
 ## Decisiones técnicas
@@ -36,6 +36,10 @@ La imagen `ArquitecturaBarMatchIA_MVP.png`, ya publicada en esta carpeta, corres
 
 ## Alcance demostrado y limitaciones
 
-La auditoría de cierre del 15/11 documentó un ensayo general sin mocks contra la API real y el DWH de pruebas, con 10/10 casos satisfactorios. No equivale a un despliegue productivo. Quedaron pendientes varios controles adicionales de seguridad, despliegue público y pruebas en dispositivos físicos. La galería editable permanece reservada para MVP2.
+La auditoría de cierre del 15/11 documentó un ensayo general sin mocks contra la API real y el DWH de pruebas, con 10/10 casos satisfactorios. No equivale a un despliegue productivo. La integración funcional, controles del Motor y BI respaldan el alcance cumplido del MVP1. Las limitaciones no bloqueantes de endurecimiento y pruebas físicas no invalidan ese resultado. Hosting productivo y galería editable pertenecen a evolución posterior.
 
-**Fuentes de trazabilidad:** documentación académica `00BarMatchIA_MarcoAgil/05_diseno/01_arquitectura.md`; repositorio privado de desarrollo, PR #159, #163, #169 y `docs/pruebas/auditoria-mvp1-2026-11-15.md` (consultables por el equipo; código fuente no incluido en esta entrega).
+**Fuentes de trazabilidad:** [arquitectura del marco ágil](../00BarMatchIA_MarcoAgil/05_diseno/01_arquitectura.md) y [fuentes de integración y auditoría](../README.md#fuentes-y-alcance).
+
+## Relación con el marco ágil
+
+[Arquitectura y decisiones actualizadas](../00BarMatchIA_MarcoAgil/05_diseno/01_arquitectura.md), [modelo de datos](../00BarMatchIA_MarcoAgil/05_diseno/02_modelo_datos.md) y [fuentes privadas fijadas](../README.md#fuentes-y-alcance). BI-03 y la 006 respaldan el DWH/KPI de pruebas; el incremental vivo sigue como evolución BI-06. Docker acredita laboratorios, no un Compose integral listo para producción.

@@ -1,109 +1,32 @@
-# 5.5 Diseño Docker
+# 5.5 Docker y reproducibilidad del cierre MVP1
 
-> **Decisión (Matriz #5, ADR-008):** PostgreSQL, Auth y Storage **ya están en Supabase Cloud**. Docker se usa **solo para servicios propios** cuando aporta reproducibilidad. No se duplica la base de datos en un contenedor para producción.
-> ⚠️ **Validar contra el repo:** los cambios Docker se commitearon en KAN-60. Este documento describe el diseño; los archivos reales (`Dockerfile`, `docker-compose.yml`) del repositorio de desarrollo son la referencia y deben copiarse o enlazarse aquí antes de la entrega final.
+**Corte:** 15/11/2026; revisión documental 25/11. Este documento corrige la plantilla de despliegue inicial conforme al estado verificado de `develop` (`99056d0`). La explicación académica no distribuye Dockerfiles ni configuración privada.
 
-## 5.5.1 ¿Qué es cada pieza? (para el equipo junior)
+## 5.5.1 Alcance cumplido
 
-- **Imagen:** "foto" de un sistema con todo lo necesario para correr una app (sistema operativo mínimo + Node/Python + código).
-- **Contenedor:** una imagen en ejecución, aislada del resto del computador.
-- **Dockerfile:** la receta para construir una imagen.
-- **docker-compose.yml:** archivo que levanta varios contenedores juntos, con sus variables y puertos.
-- **Build multi-etapa:** se compila en una etapa "pesada" y se copia solo el resultado a una etapa final "liviana" (imagen más chica y con menos superficie de ataque).
+Docker aportó entornos desechables de PostgreSQL y Supabase Auth para los laboratorios SQL y las pruebas de API, Motor, permisos, MFA y BI. La auditoría documenta una CI local final de 31/31 pasos que incluye esas validaciones. Son herramientas de verificación del MVP1 integrado, distintas del hosting productivo.
 
-## 5.5.2 Servicios y si se contenerizan
+OLTP, Auth y Storage de la demostración se gestionan en Supabase; el DWH de pruebas es separado del OLTP de la aplicación y mantiene ubicación provisional. La app Expo se ejecuta en emulador/dispositivo, no como contenedor productivo.
 
-| Servicio | ¿Docker? | Motivo |
-|---|---|---|
-| `api` (NestJS) | Sí | Mismo runtime en todas las máquinas; base para despliegue. |
-| `web-admin` (build estático React) | Sí | Se sirve como archivos estáticos (p. ej., con Nginx). |
-| `bi` (ETL / ML batch, Python) | Sí | Fija versiones de pandas/scikit-learn; corre como *job*, no como servidor. |
-| `dwh` (PostgreSQL de análisis) | Opcional, solo local | Mientras `<TBD:dwh-ubicacion>` no se decida (KAN-44). |
-| `mobile` (Expo) | **No** | Se ejecuta en el dispositivo vía Expo Go o *build* nativo; contenerizar Metro no aporta. |
-| PostgreSQL OLTP, Auth, Storage | **No** | Servicio gestionado en Supabase Cloud. |
+## 5.5.2 Estado de los artefactos
 
-## 5.5.3 Diagrama de despliegue local
+| Elemento | Estado respaldado y límite |
+|---|---|
+| Laboratorios PostgreSQL/Auth | Utilizados en QA; aislados del entorno compartido para carga y pruebas adversariales |
+| Imagen web | `apps/web-admin/DockerFile` corregido el 12/11: multi-etapa, contexto raíz, runtime fijado y servicio estático sin privilegios. El estado privado registra prueba local; su validación en hosting real queda posterior |
+| Compose general | Incompleto: conserva contexto/puerto web desalineados y referencia a Dockerfile de API no existente. No acredita arranque integral |
+| API contenerizada | Posibilidad de evolución; no se presenta un Dockerfile de referencia como archivo real probado |
+| BI/ML contenerizados | No se certifica un Compose productivo ni un job batch único para toda la Inteligencia |
+| Redis | No es fuente de consistencia de reservas; PostgreSQL y el Motor conservan esa responsabilidad |
 
-```mermaid
-flowchart LR
-  subgraph Host["Notebook del equipo (Docker)"]
-    API["contenedor api<br/>:3000"]
-    WEB["contenedor web-admin<br/>:8080"]
-    BI["contenedor bi<br/>(job batch)"]
-    DWH[("contenedor dwh<br/>:5433 opcional")]
-  end
-  PHONE["Teléfono / tablet<br/>Expo (misma red LAN)"]
-  SB["Supabase Cloud<br/>PostgreSQL · Auth · Storage"]
-  PHONE -- "http://IP-LAN:3000/api" --> API
-  WEB -- "/api" --> API
-  API --> SB
-  BI -- "lectura" --> SB
-  BI --> DWH
-  API --> DWH
-```
+## 5.5.3 Corrección de las instrucciones iniciales
 
-## 5.5.4 Plantilla de referencia
+Se retiran la plantilla YAML y el Dockerfile didáctico porque no coincidían con los artefactos reales y podían interpretarse como instrucciones ejecutables. No se debe afirmar que `docker compose up` levanta toda la solución ni que PostgreSQL/Auth nunca se usaron en Docker: sí se usaron como laboratorios.
 
-> Plantilla didáctica para documentar y comparar con los archivos reales. **No reemplaza** el `docker-compose.yml` del repositorio de desarrollo.
+La operación se realiza con los procedimientos vigentes del equipo en el repositorio privado, bajo autorización y entornos preparados; no se publican conexiones, migraciones, claves ni recetas de habilitación. Ver [manual técnico académico](../08_manual_tecnico.md).
 
-```yaml
-# docker-compose.yml (referencia)
-# Levanta SOLO los servicios propios. La base OLTP, Auth y Storage viven en Supabase Cloud.
-services:
-  api:
-    build:
-      context: .                      # raíz del monorepo: la API necesita packages/contracts
-      dockerfile: apps/api/Dockerfile
-    env_file: apps/api/.env           # DATABASE_URL, SUPABASE_URL, JWKS... (nunca se commitea)
-    environment:
-      API_DATA_MODE: db               # 'memory' para demo sin base de datos
-    ports:
-      - "3000:3000"                   # host:contenedor
-    restart: unless-stopped
+## 5.5.4 Evolución posterior
 
-  web-admin:
-    build:
-      context: .
-      dockerfile: apps/web-admin/Dockerfile
-      args:                           # Vite "hornea" estas variables en el build (son públicas)
-        VITE_API_URL: http://localhost:3000
-        VITE_DATA_SOURCE: api
-    ports:
-      - "8080:80"
-    depends_on: [api]
+Alinear Compose, completar imágenes de servicios, validar hosting, HTTPS/HSTS, gestión de secretos y DWH de producción son pasos previos al despliegue comercial. No invalidan la integración y las pruebas del MVP1 académico.
 
-  bi:
-    build: ./apps/bi
-    env_file: apps/bi/.env            # credencial de SOLO LECTURA al OLTP + credencial del DWH
-    profiles: ["batch"]               # no arranca con 'up'; se ejecuta con: docker compose run --rm bi
-```
-
-```dockerfile
-# apps/api/Dockerfile (referencia, build multi-etapa)
-FROM node:<TBD:version-node>-alpine AS build
-WORKDIR /repo
-RUN corepack enable                                  # activa pnpm con la versión de packageManager
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
-COPY packages/contracts packages/contracts
-COPY apps/api apps/api
-RUN pnpm install --frozen-lockfile --filter api... \
- && pnpm --filter @barmatchia/contracts build \
- && pnpm --filter api build
-
-FROM node:<TBD:version-node>-alpine AS runtime
-WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=build /repo/apps/api/dist ./dist
-COPY --from=build /repo/node_modules ./node_modules
-USER node                                            # no correr como root
-EXPOSE 3000
-CMD ["node", "dist/main.js"]
-```
-
-## 5.5.5 Buenas prácticas aplicadas
-
-- Secretos por `env_file`, nunca en la imagen ni en el compose versionado.
-- Usuario sin privilegios (`USER node`) en la imagen final.
-- `--frozen-lockfile`: el build falla si el lockfile no coincide (dependencias reproducibles).
-- `.dockerignore` con `node_modules`, `.env`, `dist`, `.git`.
-- El servicio `bi` corre como *job* (perfil `batch`), alineado con la decisión de IA batch.
+Fuentes: [estado de Docker, auditoría y trazabilidad](../../README.md#fuentes-y-alcance). Síntesis complementaria: [Despliegue Docker](../../05BarMatchIA_Docker/Despliegue_Docker.md).

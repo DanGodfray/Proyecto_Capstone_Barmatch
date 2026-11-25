@@ -19,5 +19,13 @@
 | — | Propuesta preliminar de Data Mart | Josefa / Raúl | ✅ |
 | — | Matriz final de alineamiento (02/10) | Raúl (PO) | ✅ |
 
-**Resultado:** Cumplido. La definición quedó cerrada con jerarquía de fuentes explícita, lo que permitió iniciar el Sprint 1 con contratos de API.
-**Ajuste relevante:** el stack de la presentación EA1 (FastAPI, SvelteKit, Redis, VPS) fue **reemplazado** por la Matriz de alineamiento (NestJS + Supabase, Expo, React; PostgreSQL transaccional contra sobreventa en lugar de Redis). Ver `05_diseno/01_arquitectura.md` §1.4.
+**Resultado registrado en el documento histórico:** Cumplido. La definición quedó cerrada con jerarquía de fuentes explícita, lo que permitió iniciar el Sprint 1 con contratos de API.
+**Ajuste relevante:** el stack de la presentación EA1 (FastAPI, SvelteKit, Redis, VPS) fue **reemplazado** por la Matriz de alineamiento (NestJS + Supabase, Expo, React; PostgreSQL transaccional contra sobreventa en lugar de Redis). Ver [arquitectura](../05_diseno/01_arquitectura.md) §5.1.8.
+
+## Contraste posterior: cierre técnico del 15/11/2026
+
+Esta sección actualiza la trazabilidad sin atribuir el trabajo posterior a las fechas del sprint ni cambiar sus estados Jira del 17/10. La integración real (#159), KPI/DWH (#163) y auditoría de cierre (#169) respaldan la evolución del incremento. El ensayo sin mocks dio 10/10 y el barrido final 19/19; el [backlog vigente](../02_product_backlog.md) distingue implementado, validado, pendiente y MVP2.
+
+Los mocks describen el incremento histórico, no el estado actual del MVP1. BI-03 y el dashboard con DWH de pruebas están acreditados; jobs y correo no se consideran activados, y las pruebas físicas siguen NO EJ. No se declara una aceptación del Sprint Goal, una retrospectiva adicional ni un cierre de tickets sin acta o evidencia administrativa.
+
+Fuentes y commits: [índice documental](../../README.md#fuentes-y-alcance).

@@ -2,6 +2,8 @@
 
 > Mermaid no tiene un tipo nativo de "casos de uso"; se representan con un *flowchart* usando la notación de actores y elipses.
 
+> **Corte:** 15/11/2026; revisión 25/11. Los diagramas son vistas conceptuales del producto, no contratos HTTP exhaustivos. Evidencia: [auditoría y fuentes](../../README.md#fuentes-y-alcance).
+
 ## 5.3.1 Casos de uso
 
 ```mermaid
@@ -49,13 +51,13 @@ flowchart LR
 
 | Caso de uso | Actor | Brief | Estado (front / back) |
 |---|---|---|---|
-| UC2–UC6 | Cliente | 21.6.1, 21.6.2, 21.6.4, 21.6.15, 21.6.16 | Front ✅ / Back 🔄 |
-| UC7 | Cliente | 21.6.3 | ⏳ Sprint 4 |
-| UC8–UC13 | Personal | 21.6.6, 21.6.7, 21.6.8, 21.6.17 | Front ✅ / Back ⏳ |
-| UC14 | Personal, Admin Local | 21.6.10 | ⏳ Sprint 4 |
-| UC15–UC17, UC20 | Admin Local | 21.6.9, 21.6.11, 21.6.18, 21.6.13 | Front ✅ (mock) / Back ⏳ |
-| UC18 | Admin Platform | 21.6.14, 21.6.19 | Scaffolding ✅ / Back ⏳ |
-| UC19 | Sistema | 21.6.5 | ⏳ (`<TBD:scheduler>`) |
+| UC2–UC6 | Cliente | 21.6.1, 21.6.2, 21.6.4, 21.6.15, 21.6.16 | Integrado con API real; ensayo sin mocks |
+| UC7 | Cliente | 21.6.3 | Implementado; laboratorio SQL integrado |
+| UC8–UC13 | Personal | 21.6.6, 21.6.7, 21.6.8, 21.6.17 | Operación integrada; cámara física NO EJ |
+| UC14 | Personal, Admin Local | 21.6.10 | Implementado; laboratorio SQL integrado |
+| UC15–UC17, UC20 | Admin Local | 21.6.9, 21.6.11, 21.6.18, 21.6.13 | Configuración y MFA integrados; BI real; ML experimental |
+| UC18 | Admin Platform | 21.6.14, 21.6.19 | Consola integrada con API real |
+| UC19 | Sistema | 21.6.5 | Jobs implementados/probados; apagados en ensayo |
 
 ## 5.3.2 Diagrama de clases — acceso a datos en el frontend (puertos y adaptadores)
 
@@ -97,7 +99,7 @@ classDiagram
   RepositoriosProvider --> ReservasRepository : inyecta
 ```
 
-El mismo patrón se repite en cada slice (`OperacionRepository`, `AtencionRepository`, `AdminReservasRepository`). La suite de contrato de Jest corre contra ambos adaptadores: si las dos pasan, cambiar de `mock` a `api` es solo configuración.
+El mismo patrón se repite en cada slice (`OperacionRepository`, `AtencionRepository`, `AdminReservasRepository`). La suite de contrato de Jest corre contra ambos adaptadores: si las dos pasan, el patrón permite sustituir adaptadores; la integración real requiere contratos y habilitación por slice verificados, no solo cambiar una variable global.
 
 ## 5.3.3 Diagrama de clases — dominio de la reserva (simplificado)
 
@@ -179,21 +181,21 @@ sequenceDiagram
 
   C->>APP: Elige local, fecha, personas
   APP->>API: GET /establecimientos/:id/disponibilidad?fecha&personas
-  API->>DB: Capacidad reservable − reservas vigentes por bloque
+  API->>DB: Evalúa disponibilidad y factibilidad física
   DB-->>API: Bloques
-  API-->>APP: DisponibilidadDTO (disponible, es_ahora, motivo)
+  API-->>APP: Respuesta de disponibilidad del contrato HTTP vigente
   C->>APP: Confirma bloque
   APP->>AUTH: getSession() → access_token
   APP->>API: POST /reservas (Bearer JWT, CrearReservaDTO)
   API->>API: Guard: verifica JWT, carga cuenta, exige CLIENTE
   API->>DB: BEGIN
-  API->>DB: pg_advisory_xact_lock(establecimiento + fecha)
+  API->>DB: Bloqueo transaccional por establecimiento
   Note over API,DB: Una segunda transacción concurrente espera aquí
-  API->>DB: Revalida capacidad de los bloques que ocupa la reserva
+  API->>DB: Relee estado y verifica factibilidad física con el Motor
   alt Hay capacidad
     API->>DB: INSERT reserva (codigo_reserva, qr_token) + INSERT evento_reserva
     API->>DB: COMMIT (libera el candado)
-    API-->>APP: 201 ReservaClienteDTO (sin id_reserva)
+    API-->>APP: 201 Respuesta de reserva (según contrato vigente)
     APP-->>C: Confirmación con código y QR
   else Sin capacidad
     API->>DB: ROLLBACK
@@ -217,7 +219,7 @@ sequenceDiagram
     API-->>APP: ReservaOperacionDTO[]
   end
   P->>APP: Escanea QR (expo-camera)
-  APP->>API: POST /operacion/checkin { qr_token }
+  APP->>API: Solicitud de check-in con token QR (contrato vigente)
   API->>API: Guard PERSONAL + pertenencia al establecimiento
   API->>DB: Busca reserva por qr_token del mismo local
   alt QR válido y dentro de ventana (≥ −20 min)
@@ -263,3 +265,7 @@ flowchart TB
   web -.-> CT
   api -.-> CT
 ```
+
+## 5.3.7 Alcance de validación
+
+La auditoría documenta flujos reales, laboratorios del Motor, permisos por perfil/local y MFA. UC19 no implica jobs activados en la demo; UC17 combina KPI reales de un DWH sintético con Inteligencia BETA y ML-03 experimental. Los diagramas representan comportamiento y responsabilidades; las pruebas físicas de cámara, enlaces profundos, red, háptica y rendimiento mantienen los NO EJ de la auditoría. El hallazgo de exposición de IDs internos H-4 se conserva, sin atribuir al contrato una minimización plenamente cumplida.

@@ -8,7 +8,7 @@
 |---|---|
 | Resumen de avance y objetivos cumplidos | `01_product_vision.md` §1.6 + estados de `02_product_backlog.md` |
 | Ajustes a objetivos o metodología (IE1, 20 %) | `05_diseno/01_arquitectura.md` §5.1.8 (cambio de stack) · `03_sprint_backlog/README.md` (nota de método) · retrospectivas |
-| Metodología aplicada (IE2, 20 %) | `README.md` §6 · `04_definition_of_done.md` · sprint backlogs |
+| Metodología aplicada (IE2, 20 %) | [índice documental](../README.md) · `04_definition_of_done.md` · sprint backlogs |
 | Evidencias de avance (IE3, 40 %) | Sprint backlogs + `07_pruebas/` + diagramas de `05_diseno/` + enlaces a PR/CI |
 | Monitoreo del plan de trabajo (estado: En curso / Con retraso / No iniciado / Completado / Ajustada) | `03_sprint_backlog/` (estados Jira) |
 | Factores facilitadores / obstaculizadores | `06_retrospectivas/` |
@@ -20,9 +20,9 @@
 |---|---|
 | Relevancia del proyecto | `09_innovacion.md` §9.1 |
 | Objetivos | `01_product_vision.md` §1.6 |
-| Metodología y pertinencia | `README.md` §6 + sprints + DoD |
+| Metodología y pertinencia | [índice documental](../README.md) + sprints + DoD |
 | Desarrollo, dificultades y ajustes | Sprints + retrospectivas |
-| Evidencias | Todo `docs/` + repositorio de código + video de demo |
+| Evidencias | [Índice de evidencias académicas](../README.md), [resultados de cierre](07_pruebas/README.md) y videos; las fuentes privadas se citan sin copiar código |
 
 ## Competencias del perfil de egreso (Formativa 2.3, IL 2.4)
 
@@ -32,3 +32,11 @@
 | Gestionar proyectos informáticos | 2.1 planifica · 2.2 controla | Product backlog + calendario de sprints · estados Jira + retrospectivas |
 | Construir modelos de datos escalables | 3.1 diseña · 3.2 implementa | `05_diseno/02_modelo_datos.md` · DDL en Supabase (KAN-73) |
 | Desarrollar una solución de software sistematizada | 4.1 construye · 4.2 integra · 4.3 implanta | Monorepo + CI · contratos y adaptadores · Docker + manual técnico |
+
+## Rutas de entrega y corte documental
+
+Los informes definitivos se conservan sin modificación en [Evidencias Grupales](../../../Evidencias%20Grupales/): `2.4_GuiaEstudiante_Fase 2_DesarrolloProyecto APT (Español).docx` y `2.6_GuiaEstudiante_Fase 2_Informe Final Proyecto APT (Español).docx`, junto con ambas planillas. Los tres diarios 2.1 están en [Evidencias Individuales](../../../Evidencias%20Individuales/).
+
+Las referencias de octubre respaldan el avance histórico. Para el cierre técnico al 15/11 se utilizan [backlog actualizado](02_product_backlog.md), [diseño](05_diseno/README.md), [pruebas](07_pruebas/README.md) y [fuentes fijadas](../README.md#fuentes-y-alcance). No se modifican los Word ni se declara que reflejen automáticamente cada corrección de Markdown.
+
+El cierre reconoce integración funcional, controles de concurrencia, operación y BI validados; diferencia limitaciones no bloqueantes y evolución/preproducción. No se atribuye certificación comercial ni cierre de tickets sin evidencia.

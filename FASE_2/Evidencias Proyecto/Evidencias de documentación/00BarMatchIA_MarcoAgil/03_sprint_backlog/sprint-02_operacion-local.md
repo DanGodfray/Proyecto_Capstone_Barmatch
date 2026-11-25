@@ -43,5 +43,13 @@
 | KAN-50 | J-14 | Redactar ADRs con decisiones de Raúl | Josefa | ⏳ |
 | KAN-51 | J-06 | Atributos de cliente del Data Mart (Matriz #25) | Josefa | ⏳ |
 
-**Resultado del Sprint Goal:** ⚠️ **Parcial** `<TBD:confirmar-equipo>`. La capa de presentación de toda la operación del local está lista sobre mocks; la lógica transaccional (asignación con lock, walk-in con lock, scheduler de no-show) y el pipeline BI siguen pendientes.
+**Resultado histórico del Sprint Goal (registro al 17/10):** ⚠️ **Parcial** `<TBD:confirmar-equipo>`. La capa de presentación de toda la operación del local está lista sobre mocks; la lógica transaccional (asignación con lock, walk-in con lock, scheduler de no-show) y el pipeline BI estaban pendientes en ese registro.
 **Riesgo detectado:** el frontend avanza más rápido que backend y BI; la brecha aumenta el riesgo de integración tardía. Ver retrospectiva.
+
+## Contraste posterior: cierre técnico del 15/11/2026
+
+Esta sección actualiza la trazabilidad sin atribuir el trabajo posterior a las fechas del sprint ni cambiar sus estados Jira del 17/10. La integración real (#159), KPI/DWH (#163) y auditoría de cierre (#169) respaldan la evolución del incremento. El ensayo sin mocks dio 10/10 y el barrido final 19/19; el [backlog vigente](../02_product_backlog.md) distingue implementado, validado, pendiente y MVP2.
+
+Los mocks describen el incremento histórico, no el estado actual del MVP1. BI-03 y el dashboard con DWH de pruebas están acreditados; jobs y correo no se consideran activados, y las pruebas físicas siguen NO EJ. No se declara una aceptación del Sprint Goal, una retrospectiva adicional ni un cierre de tickets sin acta o evidencia administrativa.
+
+Fuentes y commits: [índice documental](../../README.md#fuentes-y-alcance).

@@ -27,3 +27,7 @@
 |---|---|---|---|
 ## Seguimiento de acciones del sprint anterior
 ```
+
+## Conservación del registro histórico
+
+Revisión documental del 25/11/2026: las dos retrospectivas existentes conservan íntegros sus textos, métricas y marcadores de participantes, fechas y voz del equipo. Sus estados corresponden al 17/10 y no describen el cierre técnico actual. No se encontró evidencia suficiente en las fuentes revisadas para completar esas intervenciones ni crear retrospectivas de los sprints posteriores. La integración técnica posterior se consulta en el [índice de sprints](../03_sprint_backlog/README.md), sin sustituir una retrospectiva real.
